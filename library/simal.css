@@ -1,0 +1,280 @@
+/* =========================================================
+   Simal CSS
+   Lightweight and Simple alert using native <dialog>
+   ========================================================= */
+
+@font-face {
+	font-family: 'Commissioner';
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+	src: url('/wp-content/plugins/kotti-libs/assets/fonts/commissioner.woff2') format('woff2');		
+}
+
+
+/* =========================================================
+   Simal CSS Variables
+   ========================================================= */
+
+:root {
+
+    /* Dialog */
+    --simal-dialog-backdrop-background-color: rgba(0, 0, 0, 0.45);
+
+    /* Container */
+    --simal-container-background-color: #ffffff;
+    --simal-container-color: #212529;
+
+    /* Icons */
+    --simal-success-icon-color: #28a745;
+    --simal-error-icon-color: #dc3545;
+    --simal-warning-icon-color: #f0ad00;
+    --simal-info-icon-color: #0d6efd;
+    --simal-question-icon-color: #6f42c1;
+
+    /* Title */
+    --simal-title-font-family: Commissioner, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	
+    /* Text */
+    --simal-text-font-family: Commissioner, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --simal-text-color: #333333;
+
+    /* Validation Message */
+    /*--simal-validation-message-background-color: rgb(240, 240, 240);
+    --simal-validation-message-color: rgb(102, 102, 102); */
+	
+    --simal-validation-message-background-color: #fcf0f0;;
+    --simal-validation-message-color: #3c434a ;
+	--simal-validation-message-border-color: #cc1818;
+
+    /* Button */
+    --simal-button-font-family: Commissioner, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	--simal-button-color: #ffffff;
+
+    /* Confirm Button */
+    --simal-confirm-button-background-color: rgb(112, 102, 224);
+
+    /* Cancel Button */
+    --simal-cancel-button-background-color: rgb(110, 120, 129);
+
+    /* Deny Button */
+    --simal-deny-button-background-color: #dc3545;
+
+    /* Button Focus */
+    --simal-button-focus-visible-outline-color: rgba(13, 110, 253, 0.25);
+}
+
+
+html.simal-shown,
+body.simal-shown {
+    overscroll-behavior: none;
+    overflow: hidden;
+}
+
+.simal-dialog {
+    font-size: 16px;
+    width: min(90vw, 480px);
+    max-width: 480px;
+    padding: 0;
+    border: 0;
+    border-radius: 0.75em;
+    background: transparent;
+    overflow: visible;
+    box-sizing: border-box;
+}
+
+.simal-dialog::backdrop {
+    background: var(--simal-dialog-backdrop-background-color);
+    backdrop-filter: blur(2px);
+}
+
+.simal-container {
+    width: 100%;
+    padding: 1.5625em 0;
+    border-radius: 0.75em;
+    background: var(--simal-container-background-color);
+    color: var(--simal-container-color);
+    text-align: center;
+    box-sizing: border-box;
+    animation: simal-show 0.2s ease-out;
+}
+
+.simal-icon {
+    width: 4.5em;
+    height: 4.5em;
+    margin: 0 auto 1.25em;
+    border: 0.22em solid currentColor;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.simal-icon-symbol {
+    font-size: 2.625em;
+    font-weight: 500;
+    line-height: 1;
+}
+
+.simal-icon-success {
+    color: var(--simal-success-icon-color);
+}
+
+.simal-icon-error {
+    color: var(--simal-error-icon-color);
+}
+
+.simal-icon-warning {
+    color: var(--simal-warning-icon-color);
+}
+
+.simal-icon-info {
+    color: var(--simal-info-icon-color);
+}
+
+.simal-icon-question {
+    color: var(--simal-question-icon-color);
+}
+
+.simal-title {
+    font-size: 1.5em;
+	padding: 0 0.5em;
+    font-family: var(--simal-title-font-family);
+    font-weight: 500;
+    line-height: 1.5;
+    margin-bottom: 0.8334em;
+}
+
+.simal-content {
+    padding: 0 0.9375em;
+    line-height: 1.5;
+    margin-bottom: 1.25em;
+}
+
+.simal-text-container {
+	font-size: 1.2em;
+	font-family: var(--simal-text-font-family);
+    color: var(--simal-text-color);
+	font-weight: 400;
+}
+
+.simal-input {
+	font-size: 1.15em;
+    width: 100%;
+	height: 2.605em;
+    padding: 0 .75em !important;
+	color: #545454 !important;
+    box-sizing: border-box;
+	rgba(0, 0, 0, 0.06) 0px 1px 1px 0px inset;
+    margin: 0;
+}
+
+.simal-input + .simal-input {
+    margin-top: 0.85em;
+}
+
+.simal-validation-message {
+	font-size: 1.1em;
+    background-color: var(--simal-validation-message-background-color);
+    color: var(--simal-validation-message-color);
+    text-align: center;
+    padding: 0.625em;
+	line-height: 1.25;
+	border-inline : 0.1420em solid var(--simal-validation-message-border-color);
+    margin-bottom: 1.1363em;
+}
+
+.simal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65em;
+    flex-wrap: wrap;
+}
+
+.simal-button {
+	font-size: 1.05em;
+    min-width: 4.76em;
+    padding: 0.595em 1.07em;
+    border: 0;
+    border-radius: 0.357em;
+	font-family: var(--simal-button-font-family);
+    font-weight: 500;
+    color: var(--simal-button-color);
+    cursor: pointer;
+    transition:
+        background-color 0.15s ease,
+        opacity 0.15s ease,
+        transform 0.1s ease;
+}
+
+.simal-button:hover {
+    opacity: 0.9;
+}
+
+.simal-button:active {
+    transform: scale(0.97);
+}
+
+.simal-button:focus-visible {
+    outline: 0.1875em solid var(--simal-button-focus-visible-outline-color);
+    outline-offset: 0.125em;
+}
+
+.simal-confirm-button {
+    background: var(--simal-confirm-button-background-color);}
+
+.simal-cancel-button {
+    background: var(--simal-cancel-button-background-color);
+}
+
+.simal-deny-button {
+    background: var(--simal-deny-button-background-color);
+}
+
+
+/* ---------------------------------------------------------
+   Animation
+   --------------------------------------------------------- */
+
+@keyframes simal-show {
+
+    from {
+        opacity: 0;
+        transform: scale(0.92);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+}
+
+/* ---------------------------------------------------------
+   Scroll lock support for modern browsers
+   --------------------------------------------------------- */
+
+@supports selector(html:has(#simalDialog[open])) {
+
+    html:has(#simalDialog[open]),
+    body:has(#simalDialog[open]) {
+        overscroll-behavior: none;
+        overflow: hidden;
+    }
+
+}
+
+/* ---------------------------------------------------------
+   Mobile
+   --------------------------------------------------------- */
+
+@media (max-width: 480px) {
+
+    .simal-dialog {
+        width: calc(100vw - 26px);
+		font-size: 15px;
+    }
+
+}
