@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Simal — a lightweight, dependency-free JavaScript dialog library built with the native HTML dialog element.">
+    <title>Simal — Lightweight JavaScript Dialog</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../simal.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="nav-wrap">
+        <a class="brand" href="#top" aria-label="Simal home">
+            <span class="brand-mark">S</span>
+            <span>Simal</span>
+        </a>
+
+        <nav class="nav">
+            <a href="#getting-started">Getting Started</a>
+            <a href="#examples">Examples</a>
+            <a href="#configuration">Configuration</a>
+            <a href="#api">API</a>
+            <a class="github-link" href="https://github.com/kprabhupaul/simal" target="_blank" rel="noopener">GitHub ↗</a>
+        </nav>
+    </div>
+</header>
+
+<main id="top">
+
+    <section class="hero">
+        <div class="hero-inner">
+            <div class="eyebrow">LIGHTWEIGHT · DEPENDENCY-FREE · NATIVE DIALOG</div>
+
+            <h1>Simple dialogs.<br><span>Without the overhead.</span></h1>
+
+            <p class="hero-text">
+                Simal is a lightweight JavaScript dialog library built on the native
+                <code>&lt;dialog&gt;</code> element. Simple API, native forms, validation,
+                lifecycle hooks, and browser/device Back-button support.
+            </p>
+
+            <div class="hero-actions">
+                <button class="primary-btn" data-demo="basic">Try Simal</button>
+                <a class="secondary-btn" href="#getting-started">Get Started</a>
+            </div>
+
+            <div class="feature-row">
+                <span>✓ Zero dependencies</span>
+                <span>✓ Promise based</span>
+                <span>✓ Native validation</span>
+                <span>✓ Forms & inputs</span>
+                <span>✓ Back-button support</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="section intro">
+        <div class="section-heading">
+            <span class="section-kicker">WHY SIMAL</span>
+            <h2>Small API. Useful features.</h2>
+            <p>
+                Simal keeps the dialog experience simple while providing the features
+                needed for everyday application dialogs.
+            </p>
+        </div>
+
+        <div class="cards">
+            <article class="card">
+                <div class="card-icon">◎</div>
+                <h3>Native & lightweight</h3>
+                <p>Built around the browser's native <code>&lt;dialog&gt;</code> element.</p>
+            </article>
+
+            <article class="card">
+                <div class="card-icon">↗</div>
+                <h3>Promise based</h3>
+                <p>Handle confirm, cancel, and deny results with a simple Promise.</p>
+            </article>
+
+            <article class="card">
+                <div class="card-icon">✓</div>
+                <h3>Forms included</h3>
+                <p>Use normal HTML inputs, forms, and native browser validation.</p>
+            </article>
+
+            <article class="card">
+                <div class="card-icon">↩</div>
+                <h3>Back-button aware</h3>
+                <p>Browser and Android device Back can close the active dialog cleanly.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="section dark-section" id="getting-started">
+        <div class="section-heading light">
+            <span class="section-kicker">GETTING STARTED</span>
+            <h2>Use Simal in seconds.</h2>
+            <p>Add the stylesheet and script, then call <code>simal.fire()</code>.</p>
+        </div>
+
+        <div class="code-grid">
+            <div class="code-card">
+                <div class="code-label">HTML</div>
+<pre><code>&lt;link rel="stylesheet" href="simal.css"&gt;
+&lt;script src="simal.js"&gt;&lt;/script&gt;</code></pre>
+            </div>
+
+            <div class="code-card">
+                <div class="code-label">JAVASCRIPT</div>
+<pre><code>simal.fire({
+    title: 'Welcome',
+    text: 'Simal is working!',
+    icon: 'success'
+});</code></pre>
+            </div>
+        </div>
+
+        <div class="live-callout">
+            <div>
+                <strong>Ready to try it?</strong>
+                <span>Open a real Simal dialog using the library loaded on this page.</span>
+            </div>
+            <button class="primary-btn small" data-demo="basic">Open dialog</button>
+        </div>
+    </section>
+
+    <section class="section" id="examples">
+        <div class="section-heading">
+            <span class="section-kicker">EXAMPLES</span>
+            <h2>Explore the core features.</h2>
+            <p>These examples use the actual Simal API.</p>
+        </div>
+
+        <div class="example-grid">
+
+            <article class="example-card">
+                <div class="example-top">
+                    <span>01</span>
+                    <h3>Success dialog</h3>
+                </div>
+<pre><code>simal.fire({
+    title: 'Success!',
+    text: 'Your changes were saved.',
+    icon: 'success'
+});</code></pre>
+                <button class="demo-btn" data-demo="success">Try example</button>
+            </article>
+
+            <article class="example-card">
+                <div class="example-top">
+                    <span>02</span>
+                    <h3>Confirm & cancel</h3>
+                </div>
+<pre><code>const result = await simal.fire({
+    title: 'Delete item?',
+    text: 'This cannot be undone.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Delete',
+    cancelButtonText: 'Cancel'
+});</code></pre>
+                <button class="demo-btn" data-demo="confirm">Try example</button>
+            </article>
+
+            <article class="example-card">
+                <div class="example-top">
+                    <span>03</span>
+                    <h3>Deny button</h3>
+                </div>
+<pre><code>simal.fire({
+    title: 'Choose an action',
+    showDenyButton: true,
+    showCancelButton: true,
+    confirmButtonText: 'Save',
+    denyButtonText: 'Discard',
+    cancelButtonText: 'Cancel'
+});</code></pre>
+                <button class="demo-btn" data-demo="deny">Try example</button>
+            </article>
+
+            <article class="example-card">
+                <div class="example-top">
+                    <span>04</span>
+                    <h3>HTML content</h3>
+                </div>
+<pre><code>simal.fire({
+    title: 'HTML content',
+    html: '&lt;strong&gt;Hello!&lt;/strong&gt;&lt;br&gt;This is HTML.'
+});</code></pre>
+                <button class="demo-btn" data-demo="html">Try example</button>
+            </article>
+
+            <article class="example-card wide">
+                <div class="example-top">
+                    <span>05</span>
+                    <h3>Form & native validation</h3>
+                </div>
+<pre><code>const result = await simal.fire({
+    title: 'Create account',
+    html: `
+        &lt;form&gt;
+            &lt;input name="name" required
+                   minlength="3"
+                   placeholder="Your name"&gt;
+            &lt;input name="email" type="email"
+                   required
+                   placeholder="Email"&gt;
+        &lt;/form&gt;
+    `,
+    showCancelButton: true,
+    preConfirm: (values) => values
+});
+
+console.log(result.value);</code></pre>
+                <button class="demo-btn" data-demo="form">Try example</button>
+            </article>
+
+            <article class="example-card">
+                <div class="example-top">
+                    <span>06</span>
+                    <h3>Validation message</h3>
+                </div>
+<pre><code>preConfirm: async (values) => {
+    if (values.name === 'admin') {
+        simal.showValidationMessage(
+            'That name is not allowed.'
+        );
+        return;
+    }
+
+    return values;
+}</code></pre>
+                <button class="demo-btn" data-demo="validation">Try example</button>
+            </article>
+
+            <article class="example-card">
+                <div class="example-top">
+                    <span>07</span>
+                    <h3>Lifecycle hooks</h3>
+                </div>
+<pre><code>simal.fire({
+    title: 'Lifecycle',
+    text: 'Open the browser console.',
+    preOpen: (dialog) =&gt; console.log('preOpen', dialog),
+    didOpen: (dialog) =&gt; console.log('didOpen', dialog),
+    preClose: (dialog) =&gt; console.log('preClose', dialog),
+    didClose: (dialog) =&gt; console.log('didClose', dialog)
+});</code></pre>
+                <button class="demo-btn" data-demo="lifecycle">Try example</button>
+            </article>
+
+            <article class="example-card">
+                <div class="example-top">
+                    <span>08</span>
+                    <h3>Pre-deny</h3>
+                </div>
+<pre><code>simal.fire({
+    title: 'Discard changes?',
+    showDenyButton: true,
+    preDeny: async () =&gt; {
+        return 'discarded';
+    }
+});</code></pre>
+                <button class="demo-btn" data-demo="predeny">Try example</button>
+            </article>
+
+        </div>
+    </section>
+
+    <section class="section dark-section" id="configuration">
+        <div class="section-heading light">
+            <span class="section-kicker">CONFIGURATION</span>
+            <h2>Everything in one place.</h2>
+            <p>Pass an options object to <code>simal.fire()</code>.</p>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Default</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>title</code></td><td><code>''</code></td><td>Dialog title.</td></tr>
+                    <tr><td><code>text</code></td><td><code>''</code></td><td>Plain text content.</td></tr>
+                    <tr><td><code>html</code></td><td><code>''</code></td><td>HTML content. Takes priority over <code>text</code>.</td></tr>
+                    <tr><td><code>icon</code></td><td><code>''</code></td><td><code>success</code>, <code>error</code>, <code>warning</code>, <code>info</code>, <code>question</code>.</td></tr>
+                    <tr><td><code>showCancelButton</code></td><td><code>false</code></td><td>Show the Cancel button.</td></tr>
+                    <tr><td><code>showDenyButton</code></td><td><code>false</code></td><td>Show the Deny button.</td></tr>
+                    <tr><td><code>confirmButtonText</code></td><td><code>'OK'</code></td><td>Confirm button label.</td></tr>
+                    <tr><td><code>cancelButtonText</code></td><td><code>'Cancel'</code></td><td>Cancel button label.</td></tr>
+                    <tr><td><code>denyButtonText</code></td><td><code>'Deny'</code></td><td>Deny button label.</td></tr>
+                    <tr><td><code>allowOutsideClick</code></td><td><code>true</code></td><td>Allow closing by clicking outside the dialog.</td></tr>
+                    <tr><td><code>allowEscapeKey</code></td><td><code>true</code></td><td>Allow closing with Escape.</td></tr>
+                    <tr><td><code>preConfirm</code></td><td><code>null</code></td><td>Run before confirmation. Supports sync/async functions.</td></tr>
+                    <tr><td><code>preDeny</code></td><td><code>null</code></td><td>Run before denial. Supports sync/async functions.</td></tr>
+                    <tr><td><code>preOpen</code></td><td><code>null</code></td><td>Runs before the dialog is shown.</td></tr>
+                    <tr><td><code>didOpen</code></td><td><code>null</code></td><td>Runs after the dialog is shown.</td></tr>
+                    <tr><td><code>preClose</code></td><td><code>null</code></td><td>Runs when the close process starts.</td></tr>
+                    <tr><td><code>didClose</code></td><td><code>null</code></td><td>Runs after the dialog is closed and removed.</td></tr>
+                    <tr><td><code>customClass</code></td><td>object</td><td>Customize classes for dialog elements.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="code-card config-code">
+            <div class="code-label">CUSTOM CLASSES</div>
+<pre><code>customClass: {
+    dialog: 'simal-dialog',
+    container: 'simal-container',
+    icon: 'simal-icon',
+    iconSymbol: 'simal-icon-symbol',
+    title: 'simal-title',
+    content: 'simal-content',
+    textContainer: 'simal-text-container',
+    htmlContainer: 'simal-html-container',
+    validationMessage: 'simal-validation-message',
+    actions: 'simal-actions',
+    button: 'simal-button',
+    confirmButton: 'simal-confirm-button',
+    cancelButton: 'simal-cancel-button',
+    denyButton: 'simal-deny-button',
+    htmlInputs: 'simal-input',
+    htmlFormInputs: 'simal-input'
+}</code></pre>
+        </div>
+    </section>
+
+    <section class="section" id="api">
+        <div class="section-heading">
+            <span class="section-kicker">API</span>
+            <h2>Lifecycle and public methods.</h2>
+        </div>
+
+        <div class="api-grid">
+            <article class="api-card">
+                <h3>Lifecycle</h3>
+                <div class="api-item"><code>preOpen(dialog)</code><span>Before the dialog opens.</span></div>
+                <div class="api-item"><code>didOpen(dialog)</code><span>After <code>showModal()</code>.</span></div>
+                <div class="api-item"><code>preClose(dialog)</code><span>When closing begins.</span></div>
+                <div class="api-item"><code>didClose(dialog)</code><span>After close and cleanup.</span></div>
+            </article>
+
+            <article class="api-card">
+                <h3>Methods</h3>
+                <div class="api-item"><code>simal.fire()</code><span>Open a dialog and receive a Promise.</span></div>
+                <div class="api-item"><code>simal.close()</code><span>Close the active dialog.</span></div>
+                <div class="api-item"><code>simal.isVisible()</code><span>Check whether Simal is visible.</span></div>
+                <div class="api-item"><code>simal.showValidationMessage()</code><span>Display a validation message.</span></div>
+                <div class="api-item"><code>simal.getIcon()</code><span>Get built-in icon HTML.</span></div>
+            </article>
+        </div>
+
+        <div class="result-box">
+            <div>
+                <span class="section-kicker">PROMISE RESULT</span>
+                <h3>Simple, predictable results.</h3>
+            </div>
+<pre><code>const result = await simal.fire({
+    title: 'Continue?',
+    text: 'Choose an action.',
+    showCancelButton: true
+});
+
+if (result.isConfirmed) {
+    // confirmed
+}
+
+if (result.isDenied) {
+    // denied
+}
+
+if (result.isCancelled) {
+    // cancelled
+}
+
+// preConfirm / preDeny values:
+// result.value</code></pre>
+        </div>
+    </section>
+
+    <section class="section final-cta">
+        <div>
+            <span class="section-kicker">OPEN SOURCE</span>
+            <h2>Build with Simal.</h2>
+            <p>Explore the source, report issues, and contribute on GitHub.</p>
+        </div>
+
+        <a class="primary-btn" href="https://github.com/kprabhupaul/simal" target="_blank" rel="noopener">
+            View on GitHub ↗
+        </a>
+    </section>
+
+</main>
+
+<footer class="site-footer">
+    <div>
+        <strong>Simal</strong>
+        <span>Lightweight JavaScript dialog library.</span>
+    </div>
+    <a href="https://github.com/kprabhupaul/simal" target="_blank" rel="noopener">
+        github.com/kprabhupaul/simal
+    </a>
+</footer>
+
+<script src="../simal.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
