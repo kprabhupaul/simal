@@ -77,7 +77,6 @@ body.simal-shown {
     max-width: 480px;
     padding: 0;
     border: 0;
-    border-radius: 0.75em;
     background: transparent;
     overflow: visible;
     box-sizing: border-box;
@@ -86,9 +85,35 @@ body.simal-shown {
 .simal-dialog::backdrop {
     background: var(--simal-dialog-backdrop-background-color);
     backdrop-filter: blur(2px);
+    animation: simalBackdropFadeIn 0.2s ease-out;
+}
+
+.simal-dialog.simal-closing::backdrop {
+    animation: simalBackdropFadeOut 0.2s ease-out forwards;
+}
+
+@keyframes simalBackdropFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes simalBackdropFadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
 }
 
 .simal-container {
+	position: relative;
     width: 100%;
     padding: 1.5625em 0;
     border-radius: 0.75em;
@@ -96,7 +121,44 @@ body.simal-shown {
     color: var(--simal-container-color);
     text-align: center;
     box-sizing: border-box;
-    animation: simal-show 0.2s ease-out;
+}
+
+.simal-close-button {
+	font-size: 2.3em;
+    position: absolute;
+    top: 0.272em;
+    right: 0.272em;
+    width: 1.25em;
+    height: 1.25em;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #666666;
+    font-family: Arial, sans-serif;
+    font-weight: 400;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 50%;
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease,
+        transform 0.1s ease;
+}
+.simal-close-button:hover {
+    background-color: rgba(0, 0, 0, 0.08);
+    color: #333333;
+}
+
+.simal-close-button:active {
+    transform: scale(0.9);
+}
+
+.simal-close-button:focus-visible {
+    outline: 0.1875em solid var(--simal-button-focus-visible-outline-color);
+    outline-offset: 0.125em;
 }
 
 .simal-icon {
@@ -235,21 +297,339 @@ body.simal-shown {
 
 
 /* ---------------------------------------------------------
-   Animation
+   Dialog Position
    --------------------------------------------------------- */
 
-@keyframes simal-show {
+.simal-dialog[open] {
+    position: fixed;
+    inset: auto;
+    margin: 0;
+}
 
+/* Top */
+.simal-dialog.simal-position-top {
+    inset: 1em auto auto 50%;
+    transform: translateX(-50%);
+}
+
+.simal-dialog.simal-position-top-start {
+    inset: 1em auto auto 1em;
+}
+
+.simal-dialog.simal-position-top-end {
+    inset: 1em 1em auto auto;
+}
+
+/* Center */
+.simal-dialog.simal-position-center {
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%);
+}
+
+.simal-dialog.simal-position-center-start {
+    inset: 50% auto auto 1em;
+    transform: translateY(-50%);
+}
+
+.simal-dialog.simal-position-center-end {
+    inset: 50% 1em auto auto;
+    transform: translateY(-50%);
+}
+
+/* Bottom */
+.simal-dialog.simal-position-bottom {
+    inset: auto auto 1em 50%;
+    transform: translateX(-50%);
+}
+
+.simal-dialog.simal-position-bottom-start {
+    inset: auto auto 1em 1em;
+}
+
+.simal-dialog.simal-position-bottom-end {
+    inset: auto 1em 1em auto;
+}
+
+/* ---------------------------------------------------------
+   Animation Classes
+   --------------------------------------------------------- */
+
+/* Entrance Animations */
+.fadeIn {
+    animation: fadeIn 0.2s ease-out;
+}
+
+.fadeInDown {
+    animation: fadeInDown 0.2s ease-out;
+}
+
+.fadeInLeft {
+    animation: fadeInLeft 0.2s ease-out;
+}
+
+.fadeInRight {
+    animation: fadeInRight 0.2s ease-out;
+}
+
+.fadeInUp {
+    animation: fadeInUp 0.2s ease-out;
+}
+
+.slideInLeft {
+    animation: slideInLeft 0.2s ease-out;
+}
+
+.slideInRight {
+    animation: slideInRight 0.2s ease-out;
+}
+
+.slideInTop {
+    animation: slideInTop 0.2s ease-out;
+}
+
+.slideInBottom {
+    animation: slideInBottom 0.2s ease-out;
+}
+
+/* Exit Animations */
+.fadeOut {
+    animation: fadeOut 0.2s ease-out forwards;
+}
+
+.fadeOutDown {
+    animation: fadeOutDown 0.2s ease-out forwards;
+}
+
+.fadeOutLeft {
+    animation: fadeOutLeft 0.2s ease-out forwards;
+}
+
+.fadeOutRight {
+    animation: fadeOutRight 0.2s ease-out forwards;
+}
+
+.fadeOutUp {
+    animation: fadeOutUp 0.2s ease-out forwards;
+}
+
+.slideOutLeft {
+    animation: slideOutLeft 0.2s ease-in forwards;
+}
+
+.slideOutRight {
+    animation: slideOutRight 0.2s ease-in forwards;
+}
+
+.slideOutTop {
+    animation: slideOutTop 0.2s ease-in forwards;
+}
+
+.slideOutBottom {
+    animation: slideOutBottom 0.2s ease-in forwards;
+}
+
+/* ---------------------------------------------------------
+   Animations
+   --------------------------------------------------------- */
+
+/* Fade In */
+@keyframes fadeIn {
     from {
         opacity: 0;
-        transform: scale(0.92);
+        scale: 0.92;
     }
 
     to {
         opacity: 1;
-        transform: scale(1);
+        scale: 1;
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        translate: 0 -20px;
     }
 
+    to {
+        opacity: 1;
+        translate: 0 0;
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        translate: -20px 0;
+    }
+
+    to {
+        opacity: 1;
+        translate: 0 0;
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        translate: 20px 0;
+    }
+
+    to {
+        opacity: 1;
+        translate: 0 0;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        translate: 0 20px;
+    }
+
+    to {
+        opacity: 1;
+        translate: 0 0;
+    }
+}
+
+/* Fade Out */
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes fadeOutDown {
+    from {
+        opacity: 1;
+        translate: 0 0;
+    }
+
+    to {
+        opacity: 0;
+        translate: 0 20px;
+    }
+}
+
+@keyframes fadeOutLeft {
+    from {
+        opacity: 1;
+        translate: 0 0;
+    }
+
+    to {
+        opacity: 0;
+        translate: -20px 0;
+    }
+}
+
+@keyframes fadeOutRight {
+    from {
+        opacity: 1;
+        translate: 0 0;
+    }
+
+    to {
+        opacity: 0;
+        translate: 20px 0;
+    }
+}
+
+@keyframes fadeOutUp {
+    from {
+        opacity: 1;
+        translate: 0 0;
+    }
+
+    to {
+        opacity: 0;
+        translate: 0 -20px;
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        translate: -100% 0;
+    }
+
+    to {
+        translate: 0 0;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        translate: 100% 0;
+    }
+
+    to {
+        translate: 0 0;
+    }
+}
+
+@keyframes slideInTop {
+    from {
+        translate: 0 -100%;
+    }
+
+    to {
+        translate: 0 0;
+    }
+}
+
+@keyframes slideInBottom {
+    from {
+        translate: 0 100%;
+    }
+
+    to {
+        translate: 0 0;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        translate: 0 0;
+    }
+
+    to {
+        translate: 100% 0;
+    }
+}
+
+@keyframes slideOutTop {
+    from {
+        translate: 0 0;
+    }
+
+    to {
+        translate: 0 -100%;
+    }
+}
+
+@keyframes slideOutBottom {
+    from {
+        translate: 0 0;
+    }
+
+    to {
+        translate: 0 100%;
+    }
+}
+
+@keyframes slideOutLeft {
+    from {
+        translate: 0 0;
+    }
+
+    to {
+        translate: -100% 0;
+    }
 }
 
 /* ---------------------------------------------------------
@@ -277,4 +657,20 @@ body.simal-shown {
 		font-size: 15px;
     }
 
+}
+
+.simal-dialog.left-edge {
+	inset: 0 auto auto 0;
+}
+
+.simal-dialog.right-edge {
+	inset: 0 0 auto auto;
+}
+
+.white-background {
+	background: white;
+}
+
+.no-border-radius {
+	border-radius: 0;
 }
