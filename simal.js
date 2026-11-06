@@ -3,15 +3,15 @@
 
     const lockPageScroll = () => {
 
-		document.documentElement.classList.add('simal-shown');
-    	document.body.classList.add('simal-shown');
+        document.documentElement.classList.add('simal-shown');
+        document.body.classList.add('simal-shown');
 
     };
 
     const unlockPageScroll = () => {
 
-		document.documentElement.classList.remove('simal-shown');
-    	document.body.classList.remove('simal-shown');
+        document.documentElement.classList.remove('simal-shown');
+        document.body.classList.remove('simal-shown');
 
     };
 
@@ -36,8 +36,15 @@
                     title: '',
                     text: '',
                     html: '',
+					htmlDisplayToggleClass: 'no_display',
                     icon: '',
+                    position: 'center',
 
+                    showCloseButton: false,
+                    closeButtonHtml: '&times;',
+                    closeButtonAriaLabel: 'Close',
+
+                    showConfirmButton: true,
                     showCancelButton: false,
                     showDenyButton: false,
 
@@ -61,10 +68,11 @@
                         container: 'simal-container',
                         icon: 'simal-icon',
                         iconSymbol: 'simal-icon-symbol',
+                        closeButton: 'simal-close-button',
                         title: 'simal-title',
                         content: 'simal-content',
-						textContainer: 'simal-text-container',
-    					htmlContainer: 'simal-html-container',
+                        textContainer: 'simal-text-container',
+                        htmlContainer: 'simal-html-container',
                         validationMessage: 'simal-validation-message',
                         actions: 'simal-actions',
                         button: 'simal-button',
@@ -72,7 +80,9 @@
                         cancelButton: 'simal-cancel-button',
                         denyButton: 'simal-deny-button',
                         htmlInputs: 'simal-input',
-                        htmlFormInputs: 'simal-input'
+                        htmlFormInputs: 'simal-input',
+                        showClass: 'fadeIn',
+                        hideClass: 'fadeOut'
                     },
 
                     ...options,
@@ -82,10 +92,11 @@
                         container: 'simal-container',
                         icon: 'simal-icon',
                         iconSymbol: 'simal-icon-symbol',
+                        closeButton: 'simal-close-button',
                         title: 'simal-title',
                         content: 'simal-content',
-						textContainer: 'simal-text-container',
-    					htmlContainer: 'simal-html-container',
+                        textContainer: 'simal-text-container',
+                        htmlContainer: 'simal-html-container',
                         validationMessage: 'simal-validation-message',
                         actions: 'simal-actions',
                         button: 'simal-button',
@@ -94,12 +105,28 @@
                         denyButton: 'simal-deny-button',
                         htmlInputs: 'simal-input',
                         htmlFormInputs: 'simal-input',
+                        showClass: 'fadeIn',
+                        hideClass: 'fadeOut',
                         ...(options.customClass || {})
                     }
 
                 };
 
                 const customClass = config.customClass;
+
+                const allowedPositions = [
+                    'top',
+                    'top-start',
+                    'top-end',
+                    'center',
+                    'center-start',
+                    'center-end',
+                    'bottom',
+                    'bottom-start',
+                    'bottom-end'
+                ];
+
+                const position = allowedPositions.includes(config.position) ? config.position : 'center';
 
                 const getClasses = (...classNames) => {
 
@@ -119,19 +146,49 @@
                 };
 
                 const dialog = document.createElement('dialog');
-				
-				dialog.id = 'simalDialog';
+
+                dialog.id = 'simalDialog';
 
                 dialog.className = getClasses(
                     'simal-dialog',
-                    customClass.dialog
+                    customClass.dialog,
+                    `simal-position-${position}`
                 );
+				
+				['width', 'height', 'maxWidth', 'maxHeight', 'minWidth', 'minHeight'].forEach(prop => {
+					if (config[prop]) dialog.style[prop] = config[prop];
+				});
+				
+				const isHtmlElementSelector = config.html.startsWith('#');
+
+				const htmlElement = isHtmlElementSelector ? document.getElementById(config.html.slice(1)) : null;
+
+				const htmlContent = isHtmlElementSelector ? '' : (config.html || '');
+
+				if (isHtmlElementSelector && !htmlElement) {
+					console.warn(`Simal: Element "${config.html}" not found.`);
+				}
 
                 dialog.innerHTML = `
                     <div class="${getClasses(
                         'simal-container',
                         customClass.container
                     )}">
+
+                        ${
+                            config.showCloseButton
+                                ? `<button
+                                       type="button"
+                                       class="${getClasses(
+                                           'simal-close-button',
+                                           customClass.closeButton
+                                       )}"
+                                       aria-label="${config.closeButtonAriaLabel}"
+                                   >
+                                       ${config.closeButtonHtml}
+                                   </button>`
+                                : ''
+                        }
 
                         ${
                             config.icon
@@ -159,32 +216,32 @@
                                 : ''
                         }
 
-						${
-    						config.html || config.text
-        						? `<div class="${getClasses(
-              						'simal-content',
-              						customClass.content
-          						)}">
+                        ${
+                            config.html || config.text
+                                ? `<div class="${getClasses(
+                                      'simal-content',
+                                      customClass.content
+                                  )}">
 
-               						${
-                   						config.html
-                       						? `<div class="${getClasses(
-                             						'simal-html-container',
-                             						customClass.htmlContainer
-                         						)}">
-                              						${config.html}
-                          						</div>`
-                       						: `<div class="${getClasses(
-                             						'simal-text-container',
-                             						customClass.textContainer
-                         						)}">
-                              						${config.text}
-                          						</div>`
-               						}
+                                       ${
+                                           config.html
+                                               ? `<div class="${getClasses(
+                                                     'simal-html-container',
+                                                     customClass.htmlContainer
+                                                 )}">
+                                                      ${htmlContent}
+                                                  </div>`
+                                               : `<div class="${getClasses(
+                                                     'simal-text-container',
+                                                     customClass.textContainer
+                                                 )}">
+                                                      ${config.text}
+                                                  </div>`
+                                       }
 
-           						</div>`
-        						: ''
-						}
+                                   </div>`
+                                : ''
+                        }
 
                         <div
                             class="${getClasses(
@@ -231,30 +288,199 @@
                                     : ''
                             }
 
-                            <button
-                                type="button"
-                                class="${getClasses(
-                                    'simal-button',
-                                    customClass.button,
-                                    'simal-confirm-button',
-                                    customClass.confirmButton
-                                )}"
-                            >
-                                ${config.confirmButtonText}
-                            </button>
+                            ${
+                                config.showConfirmButton
+                                    ? `<button
+                                           type="button"
+                                           class="${getClasses(
+                                               'simal-button',
+                                               customClass.button,
+                                               'simal-confirm-button',
+                                               customClass.confirmButton
+                                           )}"
+                                       >
+                                           ${config.confirmButtonText}
+                                       </button>`
+                                    : ''
+                            }
 
                         </div>
 
                     </div>
                 `;
 
+                const container = dialog.querySelector('.simal-container');
+				
+				let htmlPlaceholder = null;
+
+				if (htmlElement && htmlElement.parentNode) {
+
+    				htmlPlaceholder = document.createComment('simal-placeholder');
+
+    				htmlElement.parentNode.insertBefore(htmlPlaceholder, htmlElement);
+										
+					if (config.htmlDisplayToggleClass) {
+    					htmlElement.classList.remove( ...config.htmlDisplayToggleClass.split(/\s+/).filter(Boolean) );
+					}
+
+    				dialog.querySelector('.simal-html-container').appendChild(htmlElement);
+				}
+
+                /*
+                 * ---------------------------------------------------------
+                 * Animation Class Helpers
+                 * ---------------------------------------------------------
+                 */
+
+                const addClassNames = (element, classNames) => {
+
+                    if (!element || typeof classNames !== 'string') {
+                        return;
+                    }
+
+                    classNames
+                        .split(/\s+/)
+                        .filter(Boolean)
+                        .forEach((className) => {
+                            element.classList.add(className);
+                        });
+
+                };
+
+                const removeClassNames = (element, classNames) => {
+
+                    if (!element || typeof classNames !== 'string') {
+                        return;
+                    }
+
+                    classNames
+                        .split(/\s+/)
+                        .filter(Boolean)
+                        .forEach((className) => {
+                            element.classList.remove(className);
+                        });
+
+                };
+
+                /*
+                 * ---------------------------------------------------------
+                 * Exit Animation
+                 * ---------------------------------------------------------
+                 */
+
+				const runHideAnimation = (callback) => {
+
+    if (!config.customClass.hideClass) {
+        callback();
+        return;
+    }
+
+    // Remove entrance animation and start exit animation.
+    removeClassNames(dialog, config.customClass.showClass);
+    addClassNames(dialog, config.customClass.hideClass);
+
+    // Trigger backdrop exit animation at the same time.
+    dialog.classList.add('simal-closing');
+
+    // Read the dialog's exit animation duration.
+    const computedStyle = window.getComputedStyle(dialog);
+
+    const parseTime = (value) => {
+        const time = parseFloat(value) || 0;
+
+        return value.trim().endsWith('ms')
+            ? time
+            : time * 1000;
+    };
+
+    const durations = computedStyle.animationDuration
+        .split(',')
+        .map(parseTime);
+
+    const delays = computedStyle.animationDelay
+        .split(',')
+        .map(parseTime);
+
+    const animationCount = Math.max(
+        durations.length,
+        delays.length
+    );
+
+    let totalDuration = 0;
+
+    for (let i = 0; i < animationCount; i++) {
+        totalDuration = Math.max(
+            totalDuration,
+            durations[i % durations.length] +
+            delays[i % delays.length]
+        );
+    }
+
+    if (totalDuration <= 0) {
+        callback();
+        return;
+    }
+
+    let finished = false;
+    let timeoutId;
+
+    const complete = () => {
+
+        if (finished) {
+            return;
+        }
+
+        finished = true;
+
+        dialog.removeEventListener(
+            'animationend',
+            handleAnimationEnd
+        );
+
+        window.clearTimeout(timeoutId);
+
+        callback();
+
+    };
+
+    const animationStart = window.performance.now();
+
+    const handleAnimationEnd = (event) => {
+
+        if (
+            event.target === dialog &&
+            window.performance.now() >=
+                animationStart + totalDuration - 20
+        ) {
+            complete();
+        }
+
+    };
+
+    dialog.addEventListener(
+        'animationend',
+        handleAnimationEnd
+    );
+
+    timeoutId = window.setTimeout(
+        complete,
+        totalDuration + 50
+    );
+
+};
+				
+                /*
+                 * ---------------------------------------------------------
+                 * Input and Form Classes
+                 * ---------------------------------------------------------
+                 */
+
                 const applyInputClasses = () => {
 
                     const inputSelector =
                         'input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]):not([type=hidden]):not([type=button]):not([type=submit]):not([type=reset]), select, textarea';
 
-                    const controls =
-                        dialog.querySelectorAll(inputSelector);
+                    const controls = dialog.querySelectorAll(inputSelector);
 
                     controls.forEach((control) => {
 
@@ -296,6 +522,12 @@
 
                 };
 
+                /*
+                 * ---------------------------------------------------------
+                 * State Variables
+                 * ---------------------------------------------------------
+                 */
+
                 let completed = false;
                 let waitingForHistoryCleanup = false;
                 let historyStateAdded = false;
@@ -308,6 +540,12 @@
                     ...(history.state || {}),
                     __simalDialog: true
                 };
+
+                /*
+                 * ---------------------------------------------------------
+                 * History and Dialog Cleanup
+                 * ---------------------------------------------------------
+                 */
 
                 const removePopStateListener = () => {
 
@@ -335,6 +573,17 @@
                     if (dialog.open) {
                         dialog.close();
                     }
+					
+					if (htmlElement && htmlPlaceholder?.parentNode) {
+
+						htmlPlaceholder.parentNode.insertBefore(htmlElement, htmlPlaceholder);
+						
+						if (config.htmlDisplayToggleClass) {
+    						htmlElement.classList.add( ...config.htmlDisplayToggleClass.split(/\s+/).filter(Boolean) );
+						}
+						
+    					htmlPlaceholder.remove();
+					}
 
                     dialog.remove();
 
@@ -354,23 +603,23 @@
                         isDenied: finalResult === 'denied'
                     };
 
-                    if (
-                        finalResult === 'confirmed' &&
-                        value !== undefined
-                    ) {
+                    if ( finalResult === 'confirmed' && value !== undefined) {
                         result.value = value;
                     }
 
-                    if (
-                        finalResult === 'denied' &&
-                        value !== undefined
-                    ) {
+                    if ( finalResult === 'denied' && value !== undefined) {
                         result.value = value;
                     }
 
                     resolve(result);
 
                 };
+
+                /*
+                 * ---------------------------------------------------------
+                 * Finish / Close Dialog
+                 * ---------------------------------------------------------
+                 */
 
                 const finish = (result, value) => {
 
@@ -389,27 +638,38 @@
                         config.preClose(dialog);
                     }
 
-                    // Keep the popstate listener active until
-                    // the dummy history entry has actually been removed.
-                    if (
-                        historyStateAdded &&
-                        history.state?.__simalDialog
-                    ) {
+                    // Keep the result until the exit animation and history cleanup finish.
+                    finish.pendingValue = value;
 
-                        waitingForHistoryCleanup = true;
+                    runHideAnimation(() => {
 
-                        history.back();
+                        // Keep the popstate listener active until
+                        // the dummy history entry has actually been removed.
+                        if (
+                            historyStateAdded &&
+                            history.state?.__simalDialog
+                        ) {
 
-                        // Store the value until history cleanup is complete.
-                        finish.pendingValue = value;
+                            waitingForHistoryCleanup = true;
 
-                        return;
-                    }
+                            history.back();
 
-                    removeDialog();
-                    resolveFinalResult(value);
+                            return;
+                        }
+
+                        removeDialog();
+
+                        resolveFinalResult(value);
+
+                    });
 
                 };
+
+                /*
+                 * ---------------------------------------------------------
+                 * Browser / Device Back Button
+                 * ---------------------------------------------------------
+                 */
 
                 const handlePopState = () => {
 
@@ -426,6 +686,7 @@
                         finish.pendingValue = undefined;
 
                         removeDialog();
+
                         resolveFinalResult(value);
 
                         return;
@@ -452,17 +713,27 @@
                             config.preClose(dialog);
                         }
 
-                        removeDialog();
-                        resolveFinalResult();
+                        runHideAnimation(() => {
+
+                            removeDialog();
+
+                            resolveFinalResult();
+
+                        });
 
                     }
 
                 };
 
-                const validationMessage =
-                    dialog.querySelector(
-                        '.simal-validation-message'
-                    );
+                /*
+                 * ---------------------------------------------------------
+                 * Validation Message
+                 * ---------------------------------------------------------
+                 */
+
+                const validationMessage = dialog.querySelector(
+                    '.simal-validation-message'
+                );
 
                 Simal._active = {
 
@@ -492,19 +763,17 @@
                         isConfirming = false;
                         isDenying = false;
 
-                        const confirmButton =
-                            dialog.querySelector(
-                                '.simal-confirm-button'
-                            );
+                        const confirmButton = dialog.querySelector(
+                            '.simal-confirm-button'
+                        );
 
                         if (confirmButton) {
                             confirmButton.disabled = false;
                         }
 
-                        const denyButton =
-                            dialog.querySelector(
-                                '.simal-deny-button'
-                            );
+                        const denyButton = dialog.querySelector(
+                            '.simal-deny-button'
+                        );
 
                         if (denyButton) {
                             denyButton.disabled = false;
@@ -514,25 +783,37 @@
 
                 };
 
-                const confirmButton =
-                    dialog.querySelector(
-                        '.simal-confirm-button'
-                    );
+                /*
+                 * ---------------------------------------------------------
+                 * Dialog Elements
+                 * ---------------------------------------------------------
+                 */
 
-                const cancelButton =
-                    dialog.querySelector(
-                        '.simal-cancel-button'
-                    );
+                const closeButton = dialog.querySelector(
+                    '.simal-close-button'
+                );
 
-                const denyButton =
-                    dialog.querySelector(
-                        '.simal-deny-button'
-                    );
+                const confirmButton = dialog.querySelector(
+                    '.simal-confirm-button'
+                );
+
+                const cancelButton = dialog.querySelector(
+                    '.simal-cancel-button'
+                );
+
+                const denyButton = dialog.querySelector(
+                    '.simal-deny-button'
+                );
+
+                /*
+                 * ---------------------------------------------------------
+                 * Form Submission
+                 * ---------------------------------------------------------
+                 */
 
                 // Prevent normal form submission inside Simal.
                 // Form controls are still collected and validated normally.
-                const forms =
-                    dialog.querySelectorAll('form');
+                const forms = dialog.querySelectorAll('form');
 
                 forms.forEach((form) => {
 
@@ -544,6 +825,12 @@
                     );
 
                 });
+
+                /*
+                 * ---------------------------------------------------------
+                 * Get Input Values
+                 * ---------------------------------------------------------
+                 */
 
                 const getInputValues = () => {
 
@@ -619,6 +906,12 @@
 
                 };
 
+                /*
+                 * ---------------------------------------------------------
+                 * Clear Validation Message
+                 * ---------------------------------------------------------
+                 */
+
                 const clearValidationMessage = () => {
 
                     if (!validationMessage) {
@@ -631,6 +924,12 @@
                     validationFailed = false;
 
                 };
+
+                /*
+                 * ---------------------------------------------------------
+                 * Confirm Button
+                 * ---------------------------------------------------------
+                 */
 
                 const handleConfirm = async () => {
 
@@ -667,11 +966,10 @@
 
                     let resultValue = values;
 
-                    if (
-                        typeof config.preConfirm === 'function'
-                    ) {
+                    if (typeof config.preConfirm === 'function') {
 
                         isConfirming = true;
+
                         confirmButton.disabled = true;
 
                         try {
@@ -729,6 +1027,12 @@
 
                 };
 
+                /*
+                 * ---------------------------------------------------------
+                 * Deny Button
+                 * ---------------------------------------------------------
+                 */
+
                 const handleDeny = async () => {
 
                     if (completed || isConfirming || isDenying) {
@@ -764,11 +1068,10 @@
 
                     let resultValue;
 
-                    if (
-                        typeof config.preDeny === 'function'
-                    ) {
+                    if (typeof config.preDeny === 'function') {
 
                         isDenying = true;
+
                         denyButton.disabled = true;
 
                         try {
@@ -827,10 +1130,31 @@
 
                 };
 
-                confirmButton.addEventListener(
-                    'click',
-                    handleConfirm
-                );
+                /*
+                 * ---------------------------------------------------------
+                 * Button Event Listeners
+                 * ---------------------------------------------------------
+                 */
+
+                if (closeButton) {
+
+                    closeButton.addEventListener(
+                        'click',
+                        () => {
+                            finish('cancelled');
+                        }
+                    );
+
+                }
+
+                if (confirmButton) {
+
+                    confirmButton.addEventListener(
+                        'click',
+                        handleConfirm
+                    );
+
+                }
 
                 if (cancelButton) {
 
@@ -852,6 +1176,12 @@
 
                 }
 
+                /*
+                 * ---------------------------------------------------------
+                 * Escape Key
+                 * ---------------------------------------------------------
+                 */
+
                 dialog.addEventListener(
                     'cancel',
                     (event) => {
@@ -864,6 +1194,12 @@
 
                     }
                 );
+
+                /*
+                 * ---------------------------------------------------------
+                 * Outside Click
+                 * ---------------------------------------------------------
+                 */
 
                 dialog.addEventListener(
                     'click',
@@ -887,6 +1223,7 @@
                  * Default Simal operations are executed first.
                  * User-defined preOpen is executed afterwards.
                  */
+
                 const runPreOpen = () => {
 
                     // Lock page scrolling.
@@ -924,12 +1261,17 @@
                  * Run all pre-open operations before
                  * actually opening the dialog.
                  */
+
                 runPreOpen();
 
                 /*
                  * Open the dialog.
                  */
+
                 dialog.showModal();
+
+                // Apply the configured entrance animation to the container.
+                addClassNames( dialog, config.customClass.showClass );
 
                 /*
                  * ---------------------------------------------------------
@@ -939,6 +1281,7 @@
                  * Simal has no default operation here.
                  * Run user-defined didOpen after the dialog is visible.
                  */
+
                 if (typeof config.didOpen === 'function') {
                     config.didOpen(dialog);
                 }
@@ -946,6 +1289,12 @@
             });
 
         },
+
+        /*
+         * ---------------------------------------------------------
+         * Check Dialog Visibility
+         * ---------------------------------------------------------
+         */
 
         isVisible() {
 
@@ -957,6 +1306,12 @@
 
         },
 
+        /*
+         * ---------------------------------------------------------
+         * Close Dialog Programmatically
+         * ---------------------------------------------------------
+         */
+
         close() {
 
             if (this._active) {
@@ -967,6 +1322,12 @@
 
         },
 
+        /*
+         * ---------------------------------------------------------
+         * Show Validation Message
+         * ---------------------------------------------------------
+         */
+
         showValidationMessage(message) {
 
             if (this._active?.showValidationMessage) {
@@ -974,6 +1335,12 @@
             }
 
         },
+
+        /*
+         * ---------------------------------------------------------
+         * Icons
+         * ---------------------------------------------------------
+         */
 
         getIcon(type, customClass = 'simal-icon-symbol') {
 
