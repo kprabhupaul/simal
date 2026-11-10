@@ -287,26 +287,158 @@ console.log(result.value);</code></pre>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td><code>title</code></td><td><code>''</code></td><td>Dialog title.</td></tr>
-                    <tr><td><code>text</code></td><td><code>''</code></td><td>Plain text content.</td></tr>
-                    <tr><td><code>html</code></td><td><code>''</code></td><td>HTML content. Takes priority over <code>text</code>.</td></tr>
-                    <tr><td><code>icon</code></td><td><code>''</code></td><td><code>success</code>, <code>error</code>, <code>warning</code>, <code>info</code>, <code>question</code>.</td></tr>
-                    <tr><td><code>showCancelButton</code></td><td><code>false</code></td><td>Show the Cancel button.</td></tr>
-                    <tr><td><code>showDenyButton</code></td><td><code>false</code></td><td>Show the Deny button.</td></tr>
-                    <tr><td><code>confirmButtonText</code></td><td><code>'OK'</code></td><td>Confirm button label.</td></tr>
-                    <tr><td><code>cancelButtonText</code></td><td><code>'Cancel'</code></td><td>Cancel button label.</td></tr>
-                    <tr><td><code>denyButtonText</code></td><td><code>'Deny'</code></td><td>Deny button label.</td></tr>
-                    <tr><td><code>allowOutsideClick</code></td><td><code>true</code></td><td>Allow closing by clicking outside the dialog.</td></tr>
-                    <tr><td><code>allowEscapeKey</code></td><td><code>true</code></td><td>Allow closing with Escape.</td></tr>
-                    <tr><td><code>preConfirm</code></td><td><code>null</code></td><td>Run before confirmation. Supports sync/async functions.</td></tr>
-                    <tr><td><code>preDeny</code></td><td><code>null</code></td><td>Run before denial. Supports sync/async functions.</td></tr>
-                    <tr><td><code>preOpen</code></td><td><code>null</code></td><td>Runs before the dialog is shown.</td></tr>
-                    <tr><td><code>didOpen</code></td><td><code>null</code></td><td>Runs after the dialog is shown.</td></tr>
-                    <tr><td><code>preClose</code></td><td><code>null</code></td><td>Runs when the close process starts.</td></tr>
-                    <tr><td><code>didClose</code></td><td><code>null</code></td><td>Runs after the dialog is closed and removed.</td></tr>
-                    <tr><td><code>customClass</code></td><td>object</td><td>Customize classes for dialog elements.</td></tr>
-                </tbody>
-            </table>
+                    <tr>
+                        <td><code>icon</code></td>
+                        <td><code>''</code></td>
+                        <td>Dialog icon. Supported values: <code>success</code>, <code>error</code>, <code>warning</code>, <code>info</code>, <code>question</code>.</td>
+                    </tr>
+                    <tr>
+                        <td><code>title</code></td>
+                        <td><code>''</code></td>
+                        <td>Dialog title.</td>
+                    </tr>
+                    <tr>
+            <td><code>text</code></td>
+            <td><code>''</code></td>
+            <td>Plain text content.</td>
+        </tr>
+        <tr>
+            <td><code>html</code></td>
+            <td><code>''</code></td>
+            <td>HTML content. Takes priority over <code>text</code>. You can also provide an element ID selector (e.g. <code>#myContent</code>) to move an existing HTML element into the dialog.</td>
+        </tr>
+        <tr>
+            <td><code>htmlDisplayToggleClass</code></td>
+            <td><code>'no_display'</code></td>
+            <td>CSS class(es) removed from an existing HTML element while it is inside the dialog and restored when the dialog closes. Set to <code>''</code> to disable.</td>
+        </tr>
+        <tr>
+            <td><code>position</code></td>
+            <td><code>'center'</code></td>
+            <td>Dialog position. Supported values: <code>top</code>, <code>top-start</code>, <code>top-end</code>, <code>center</code>, <code>center-start</code>, <code>center-end</code>, <code>bottom</code>, <code>bottom-start</code>, <code>bottom-end</code>.</td>
+        </tr>
+        <tr>
+            <td><code>width</code></td>
+            <td><code>—</code></td>
+            <td>Custom dialog width (e.g. <code>'500px'</code>, <code>'80%'</code>).</td>
+        </tr>
+        <tr>
+            <td><code>height</code></td>
+            <td><code>—</code></td>
+            <td>Custom dialog height.</td>
+        </tr>
+        <tr>
+            <td><code>maxWidth</code></td>
+            <td><code>—</code></td>
+            <td>Maximum dialog width.</td>
+        </tr>
+        <tr>
+            <td><code>maxHeight</code></td>
+            <td><code>—</code></td>
+            <td>Maximum dialog height.</td>
+        </tr>
+        <tr>
+            <td><code>minWidth</code></td>
+            <td><code>—</code></td>
+            <td>Minimum dialog width.</td>
+        </tr>
+        <tr>
+            <td><code>minHeight</code></td>
+            <td><code>—</code></td>
+            <td>Minimum dialog height.</td>
+        </tr>
+        <tr>
+            <td><code>showCloseButton</code></td>
+            <td><code>false</code></td>
+            <td>Show the close (×) button in the dialog.</td>
+        </tr>
+        <tr>
+            <td><code>closeButtonHtml</code></td>
+            <td><code>'&times;'</code></td>
+            <td>HTML content displayed inside the close button.</td>
+        </tr>
+        <tr>
+            <td><code>closeButtonAriaLabel</code></td>
+            <td><code>'Close'</code></td>
+            <td>Accessible label for the close button.</td>
+        </tr>
+        <tr>
+            <td><code>showConfirmButton</code></td>
+            <td><code>true</code></td>
+            <td>Show the Confirm button.</td>
+        </tr>
+        <tr>
+            <td><code>showCancelButton</code></td>
+            <td><code>false</code></td>
+            <td>Show the Cancel button.</td>
+        </tr>
+        <tr>
+            <td><code>showDenyButton</code></td>
+            <td><code>false</code></td>
+            <td>Show the Deny button.</td>
+        </tr>
+        <tr>
+            <td><code>confirmButtonText</code></td>
+            <td><code>'OK'</code></td>
+            <td>Confirm button label.</td>
+        </tr>
+        <tr>
+            <td><code>cancelButtonText</code></td>
+            <td><code>'Cancel'</code></td>
+            <td>Cancel button label.</td>
+        </tr>
+        <tr>
+            <td><code>denyButtonText</code></td>
+            <td><code>'Deny'</code></td>
+            <td>Deny button label.</td>
+        </tr>
+        <tr>
+            <td><code>allowOutsideClick</code></td>
+            <td><code>true</code></td>
+            <td>Allow closing the dialog by clicking outside it.</td>
+        </tr>
+        <tr>
+            <td><code>allowEscapeKey</code></td>
+            <td><code>true</code></td>
+            <td>Allow closing the dialog by pressing the Escape key.</td>
+        </tr>
+        <tr>
+            <td><code>preConfirm</code></td>
+            <td><code>null</code></td>
+            <td>Runs before confirmation. Receives input values and supports synchronous or asynchronous functions. Returning <code>false</code> or <code>undefined</code> prevents the dialog from closing.</td>
+        </tr>
+        <tr>
+            <td><code>preDeny</code></td>
+            <td><code>null</code></td>
+            <td>Runs before denial. Receives input values and supports synchronous or asynchronous functions. Returning <code>false</code> prevents the dialog from closing.</td>
+        </tr>
+        <tr>
+            <td><code>preOpen</code></td>
+            <td><code>null</code></td>
+            <td>Runs after Simal's initial setup but before the dialog is displayed. Receives the dialog element.</td>
+        </tr>
+        <tr>
+            <td><code>didOpen</code></td>
+            <td><code>null</code></td>
+            <td>Runs after the dialog is displayed. Receives the dialog element.</td>
+        </tr>
+        <tr>
+            <td><code>preClose</code></td>
+            <td><code>null</code></td>
+            <td>Runs when the dialog's closing process starts. Receives the dialog element.</td>
+        </tr>
+        <tr>
+            <td><code>didClose</code></td>
+            <td><code>null</code></td>
+            <td>Runs after the dialog is closed, removed from the DOM, and the original HTML element (if any) is restored. Receives the dialog element.</td>
+        </tr>
+        <tr>
+            <td><code>customClass</code></td>
+            <td><code>object</code></td>
+            <td>Customize CSS classes for individual dialog elements, including the dialog, container, buttons, icons, title, content, validation message, inputs, form, and animations.</td>
+        </tr>
+    </tbody>
+</table>
         </div>
 
         <div class="code-card config-code">
