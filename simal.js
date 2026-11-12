@@ -33,11 +33,11 @@
 
                 const config = {
 
+                    icon: '',
                     title: '',
                     text: '',
                     html: '',
 					htmlDisplayToggleClass: 'no_display',
-                    icon: '',
                     position: 'center',
 
                     showCloseButton: false,
@@ -66,14 +66,15 @@
                     customClass: {
                         dialog: 'simal-dialog',
                         container: 'simal-container',
+                        closeButton: 'simal-close-button',
                         icon: 'simal-icon',
                         iconSymbol: 'simal-icon-symbol',
-                        closeButton: 'simal-close-button',
                         title: 'simal-title',
                         content: 'simal-content',
                         textContainer: 'simal-text-container',
                         htmlContainer: 'simal-html-container',
                         validationMessage: 'simal-validation-message',
+						loader: 'simal-loader',
                         actions: 'simal-actions',
                         button: 'simal-button',
                         confirmButton: 'simal-confirm-button',
@@ -90,14 +91,15 @@
                     customClass: {
                         dialog: 'simal-dialog',
                         container: 'simal-container',
+                        closeButton: 'simal-close-button',
                         icon: 'simal-icon',
                         iconSymbol: 'simal-icon-symbol',
-                        closeButton: 'simal-close-button',
                         title: 'simal-title',
                         content: 'simal-content',
                         textContainer: 'simal-text-container',
                         htmlContainer: 'simal-html-container',
                         validationMessage: 'simal-validation-message',
+						loader: 'simal-loader',
                         actions: 'simal-actions',
                         button: 'simal-button',
                         confirmButton: 'simal-confirm-button',
@@ -370,104 +372,82 @@
 
 				const runHideAnimation = (callback) => {
 
-    if (!config.customClass.hideClass) {
-        callback();
-        return;
-    }
+					if (!config.customClass.hideClass) {
+        				callback();
+        				return;
+    				}
 
-    // Remove entrance animation and start exit animation.
-    removeClassNames(dialog, config.customClass.showClass);
-    addClassNames(dialog, config.customClass.hideClass);
+    				// Remove entrance animation and start exit animation.
+    				removeClassNames(dialog, config.customClass.showClass);
+    				addClassNames(dialog, config.customClass.hideClass);
 
-    // Trigger backdrop exit animation at the same time.
-    dialog.classList.add('simal-closing');
+    				// Trigger backdrop exit animation at the same time.
+    				dialog.classList.add('simal-closing');
 
-    // Read the dialog's exit animation duration.
-    const computedStyle = window.getComputedStyle(dialog);
+    				// Read the dialog's exit animation duration.
+    				const computedStyle = window.getComputedStyle(dialog);
 
-    const parseTime = (value) => {
-        const time = parseFloat(value) || 0;
+    				const parseTime = (value) => {
+        				const time = parseFloat(value) || 0;
 
-        return value.trim().endsWith('ms')
-            ? time
-            : time * 1000;
-    };
+        				return value.trim().endsWith('ms') ? time : time * 1000;
+    				};
 
-    const durations = computedStyle.animationDuration
-        .split(',')
-        .map(parseTime);
+    				const durations = computedStyle.animationDuration.split(',').map(parseTime);
 
-    const delays = computedStyle.animationDelay
-        .split(',')
-        .map(parseTime);
+    				const delays = computedStyle.animationDelay.split(',').map(parseTime);
 
-    const animationCount = Math.max(
-        durations.length,
-        delays.length
-    );
+    				const animationCount = Math.max( durations.length, delays.length );
 
-    let totalDuration = 0;
+    				let totalDuration = 0;
 
-    for (let i = 0; i < animationCount; i++) {
-        totalDuration = Math.max(
-            totalDuration,
-            durations[i % durations.length] +
-            delays[i % delays.length]
-        );
-    }
+    				for (let i = 0; i < animationCount; i++) {
+        				totalDuration = Math.max(
+            				totalDuration,
+            				durations[i % durations.length] +
+            				delays[i % delays.length]
+        				);
+    				}
 
-    if (totalDuration <= 0) {
-        callback();
-        return;
-    }
+    				if (totalDuration <= 0) {
+        				callback();
+        				return;
+    				}
 
-    let finished = false;
-    let timeoutId;
+    				let finished = false;
+    				let timeoutId;
 
-    const complete = () => {
+    				const complete = () => {
 
-        if (finished) {
-            return;
-        }
+        				if (finished) {
+            				return;
+        				}
 
-        finished = true;
+        				finished = true;
 
-        dialog.removeEventListener(
-            'animationend',
-            handleAnimationEnd
-        );
+        				dialog.removeEventListener( 'animationend', handleAnimationEnd );
 
-        window.clearTimeout(timeoutId);
+        				window.clearTimeout(timeoutId);
 
-        callback();
+        				callback();
 
-    };
+    				};
 
-    const animationStart = window.performance.now();
+    				const animationStart = window.performance.now();
 
-    const handleAnimationEnd = (event) => {
+    				const handleAnimationEnd = (event) => {
 
-        if (
-            event.target === dialog &&
-            window.performance.now() >=
-                animationStart + totalDuration - 20
-        ) {
-            complete();
-        }
+        				if ( event.target === dialog && window.performance.now() >= animationStart + totalDuration - 20 ) {
+            				complete();
+        				}
 
-    };
+    				};
 
-    dialog.addEventListener(
-        'animationend',
-        handleAnimationEnd
-    );
+    				dialog.addEventListener( 'animationend', handleAnimationEnd );
 
-    timeoutId = window.setTimeout(
-        complete,
-        totalDuration + 50
-    );
+    				timeoutId = window.setTimeout( complete, totalDuration + 50 );
 
-};
+				};
 				
                 /*
                  * ---------------------------------------------------------
@@ -734,12 +714,68 @@
                 const validationMessage = dialog.querySelector(
                     '.simal-validation-message'
                 );
+				
+				const actions = dialog.querySelector('.simal-actions');
+
+				let loadingSpinner = null;
+				let loadingElements = [];
+
+				const showLoading = () => {
+
+    				if (!actions || loadingSpinner) {
+        				return;
+    				}
+
+    				// Store existing buttons and their hidden states.
+    				loadingElements = Array.from(actions.children).map((element) => ({
+        				element,
+        				hidden: element.hidden
+    				}));
+
+    				// Hide all buttons.
+    				loadingElements.forEach(({ element }) => {
+        				element.hidden = true;
+    				});
+
+    				// Create spinner.
+    				loadingSpinner = document.createElement('span');
+					loadingSpinner.className = getClasses( 'simal-loader', customClass.loader );
+    				loadingSpinner.setAttribute('role', 'status');
+    				loadingSpinner.setAttribute('aria-label', 'Loading');
+
+    				actions.appendChild(loadingSpinner);
+    				actions.setAttribute('aria-busy', 'true');
+
+				};
+
+				const hideLoading = () => {
+
+    				if (!actions || !loadingSpinner) {
+        				return;
+    				}
+
+    				// Remove spinner.
+    				loadingSpinner.remove();
+    				loadingSpinner = null;
+
+    				// Restore buttons.
+    				loadingElements.forEach(({ element, hidden }) => {
+        				element.hidden = hidden;
+    				});
+
+    				loadingElements = [];
+    				actions.removeAttribute('aria-busy');
+
+				};
 
                 Simal._active = {
 
                     dialog,
 
                     close: () => finish('cancelled'),
+					
+					showLoading,
+    				hideLoading,
 
                     showValidationMessage: (message) => {
 
@@ -1201,20 +1237,20 @@
                  * ---------------------------------------------------------
                  */
 
-                dialog.addEventListener(
-                    'click',
-                    (event) => {
+				dialog.addEventListener('click', (event) => {
 
-                        if (
-                            config.allowOutsideClick &&
-                            event.target === dialog
-                        ) {
-                            finish('cancelled');
-                        }
+    				if (config.allowOutsideClick) {
 
-                    }
-                );
+    					const rect = dialog.getBoundingClientRect();
 
+    					const isOutsideDialog = event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom;
+
+    					if (isOutsideDialog) finish('cancelled');
+    					
+					}
+
+				});
+				
                 /*
                  * ---------------------------------------------------------
                  * preOpen
@@ -1335,6 +1371,34 @@
             }
 
         },
+		
+		/*
+		 * ---------------------------------------------------------
+		 * Show / Hide Loading Spinner
+		 * ---------------------------------------------------------
+		 */
+
+		showLoading() {
+
+    		this._active?.showLoading?.();
+
+		},
+
+		hideLoading() {
+
+    		this._active?.hideLoading?.();
+
+		},
+		
+		isLoading() {
+
+    		return !!(
+        		this._active?.dialog?.querySelector(
+            		'.simal-loading-spinner'
+        		)
+    		);
+
+		},
 
         /*
          * ---------------------------------------------------------
@@ -1358,12 +1422,10 @@
                         ✓
                     </span>
                 `,
-
-                error: `
-                    <span class="${iconSymbolClass}">
-                        X
-                    </span>
-                `,
+				
+				error: `
+    				<span class="${iconSymbolClass}"></span>
+				`,
 
                 warning: `
                     <span class="${iconSymbolClass}">
