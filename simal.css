@@ -174,9 +174,39 @@ body.simal-shown {
 }
 
 .simal-icon-symbol {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     font-size: 2.625em;
     font-weight: 500;
     line-height: 1;
+}
+
+.simal-icon-error .simal-icon-symbol {
+    position: relative;
+    width: 0.8em;
+    height: 0.8em;
+    display: inline-block;
+}
+
+.simal-icon-error .simal-icon-symbol::before,
+.simal-icon-error .simal-icon-symbol::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0.09em;
+    height: 0.8em;
+    border-radius: 0.05em;
+    background-color: currentColor;
+}
+
+.simal-icon-error .simal-icon-symbol::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.simal-icon-error .simal-icon-symbol::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
 }
 
 .simal-icon-success {
@@ -253,6 +283,23 @@ body.simal-shown {
     justify-content: center;
     gap: 0.65em;
     flex-wrap: wrap;
+}
+
+.simal-loader {
+    display: inline-block;
+    width: 1.65em;
+    height: 1.65em;
+    border: 0.2em solid currentColor;
+    border-right-color: transparent;
+	border-left-color: transparent;
+    border-radius: 50%;
+    animation: simal-loading-spin 1s linear infinite;
+}
+
+@keyframes simal-loading-spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .simal-button {
